@@ -1,0 +1,52 @@
+<ActionBar title="RadListView bug">
+</ActionBar>
+
+<GridLayout rows="auto,auto,*">
+    <Label row="0" text="In onItemSwiping callback args.index which should reference into bound items array is wrong on Android when used with grouping and/or sorting.
+        To see, plese look at console output and compare with item title you just swiped" textWrap="true"
+        class="h3"></Label>
+    <Button row="1" class="btn btn-active btn-outline" style="background-color: lightskyblue; color: white;"
+        text="Refresh Items" (tap)="onButtonPressed()" horizontalAlignment="center"></Button>
+    <!-- (itemTap)="itemTapped($event)" 
+       
+      -->
+    <RadListView #idList row="2" selectionBehavior="None" [items]="_itemsArray" swipeActions="true"
+        itemDeleteAnimation="Slide" [itemTemplateSelector]="templateSelector" [groupingFunction]="groupingFunction"
+        [sortingFunction]="sortingFunc" (itemSwiping)="onItemSwiping($event)"
+        (itemSwipeProgressStarted)="onSwipeCellStarted($event)" (itemSwipeProgressChanged)="onCellSwiping($event)">
+
+        <!-- default list item template -->
+        <ng-template tkListItemTemplate tkTemplateKey="itemTemplate" let-item="item">
+            <GridLayout rows="*,auto" columns="*,auto">
+                <Label row="0" col="0" [text]="item.title" horizontalAlignment="Left"></Label>
+                <Label row="0" rowSpan="2" col="1" [text]="item.random"></Label>
+            </GridLayout>
+        </ng-template>
+
+        <!-- default list items use this swipe template -->
+        <GridLayout *tkListItemSwipeTemplate columns="*, auto" class="slide-in-grid">
+            <GridLayout columns="*," col="1" id="right-stack" visibility="hidden" style="background-color: mediumblue;"
+                (tap)="onDeleteButtonClicked($event)">
+                <Label text="delete" verticalAlignment="center" horizontalAlignment="center"></Label>
+            </GridLayout>
+        </GridLayout>
+
+        <!-- non swipable list item template -->
+        <ng-template tkListItemTemplate tkTemplateKey="itemNotSwipableTemplate" let-item="item">
+            <GridLayout rows="*,auto" columns="*,auto" style="background-color: lightyellow;">
+                <Label row="0" col="0" text="{{ item.title + ' not swipable' }}" horizontalAlignment="Left"></Label>
+                <Label row="0" rowSpan="2" col="1" [text]="item.random"></Label>
+            </GridLayout>
+        </ng-template>
+
+        <!-- template for group headers-->
+        <ng-template tkGroupTemplate let-category="category">
+            <GridLayout rows="auto" columns="*,auto" style="background-color: lightskyblue;">
+
+                <Label row="0" col="0" text="Group Header"></Label>
+                <Label row="0" col="1" [text]="category"></Label>
+
+            </GridLayout>
+        </ng-template>
+    </RadListView>
+</GridLayout>
